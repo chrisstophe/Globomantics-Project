@@ -7,6 +7,7 @@ const PORT = process.env.PORT || 3000;
 // Create an instance of express
 const app = express();
 const sessionsRouter = require("./src/routers/sessionsRouter");
+const adminRouter = require("./src/routers/adminRouter");
 
 // Middleware
 app.use(morgan("tiny"));
@@ -15,9 +16,9 @@ app.use(express.static(`${__dirname}/public`));
 app.set("views", `${__dirname}/src/views`);
 app.set("view engine", "ejs");
 
-// Implementing sessions
-
+// Implementing sessions and the adminRouter
 app.use("/sessions", sessionsRouter);
+app.use("/admin", adminRouter);
 
 // Specify the callback for requests to a specific route
 app.get("/", (req, res) => {
