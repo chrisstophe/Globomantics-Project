@@ -5,6 +5,17 @@ const { MongoClient, ObjectId } = require("mongodb");
 const dotenv = require("dotenv").config();
 
 const sessionsRouter = express.Router();
+// Only allow access to sessions if passport has dropped a user on the request
+// Otherwise, redirect to signin
+sessionsRouter.use((req, res, next) => {
+  // You can add more checks here depending on the type of user like req.user.admin and redirect to different places
+  // Then handle that in local strategy
+  if (req.user) {
+    next();
+  } else {
+    res.redirect("auth/signin");
+  }
+});
 
 sessionsRouter.route("/").get((req, res) => {
   const url = `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@globomantics.e8xqilo.mongodb.net/?retryWrites=true&w=majority`;

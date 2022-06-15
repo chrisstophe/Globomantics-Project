@@ -1,9 +1,11 @@
 const express = require("express");
-const debug = require("debug")("app:sessionRouter");
+const debug = require("debug")("app:authRouter");
 const { MongoClient, ObjectId } = require("mongodb");
 const dotenv = require("dotenv").config();
+const passport = require("passport");
 
 const authRouter = express.Router();
+
 authRouter.route("/signup").post((req, res) => {
   //Creating the user
   const { username, password } = req.body;
@@ -27,6 +29,7 @@ authRouter.route("/signup").post((req, res) => {
 
       // Redirect to profile page
       req.login(mongoDBUser, () => {
+        debug("USER FOUND");
         res.redirect("/auth/profile");
       });
     } catch (err) {
@@ -35,6 +38,20 @@ authRouter.route("/signup").post((req, res) => {
     client.close();
   })();
 });
+
+authRouter
+  .route("/signin")
+  .get((req, res) => {
+    res.render("signin");
+  })
+  .post(
+    // Passport has a built in function that returns the function handler we need here
+    // This will send the username and password to the local strategy
+    passport.authenticate("local", {
+      successRedirect: "/auth/profile",
+      failureRedirect: "/",
+    })
+  );
 
 authRouter.route("/profile").get((req, res) => {
   res.json(req.user);
