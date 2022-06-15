@@ -32,8 +32,7 @@ sessionsRouter.route("/").get((req, res) => {
 
 sessionsRouter.route("/:id").get((req, res) => {
   const id = req.params.id;
-  const url =
-    "mongodb+srv://dbUser:ERPtuSLGren3BCxZ@globomantics.e8xqilo.mongodb.net/?retryWrites=true&w=majority";
+  const url = `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@globomantics.e8xqilo.mongodb.net/?retryWrites=true&w=majority`;
   const dbName = "globomantics";
 
   (async function mongo() {
